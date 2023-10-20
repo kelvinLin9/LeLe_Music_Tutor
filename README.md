@@ -1,35 +1,55 @@
-# vite-project
+# LeLe | 樂樂音樂家教媒合平台
+![](https://i.imgur.com/dUhuh3v.png)
 
-This template should help get you started developing with Vue 3 in Vite.
+## 專案簡介
+此為六角學院2023切版直播班專題，目標是建立一個滿足音樂老師和學生需求的網站，使用Firebase作為後端數據庫使用。
 
-## Recommended IDE Setup
+設計稿：[AWEI](https://whimsical.com/0815-NG8wL8iZ1SvCXpdocsejtZ)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 主要功能
+- 註冊登入
+- 老師建立課程
+- 學生購買課程
+- 預約上課時間並呈現在個人行事曆
+- [完整功能及數據規劃圖表](https://whimsical.com/SnHRwHTCfmbBiz4AjdjG1s)
 
-## Customize configuration
+## Demo
+https://kelvinlin9.github.io/music_tutor/
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+## 使用技術
+- Vite + Vue
+- VueRouter
+- Bootstrap 5
+- SCSS
+- ESlint(Standard)
+- Pinia
 
-```sh
+## 使用套件
+- vee-validate
+- swiper
+- sweetalert
+- moment
+- ckeditor
+- element
+- fullcalendar
+- flatpickr
+- aos
+
+## 未來目標
+- 數據結構優化
+- 評論留言
+- 後台開發
+- 金流串接
+
+
+## Project setup
+```
 npm install
 ```
 
-### Compile and Hot-Reload for Development
-
-```sh
+## Compiles and hot-reloads for development
+```
 npm run dev
 ```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```

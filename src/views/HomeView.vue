@@ -1,53 +1,44 @@
 <template>
-  <div class="container">
-    <div class="m-5 btn btn-primary"
-      @click="set()">
-      新增
-    </div>
-    <div class="m-5 btn btn-primary"
-      @click="edit()">
-      編輯..
-    </div>
-    <div class="m-5 btn btn-primary"
-      @click="deleteP()">
-      刪除
-    </div>
+  <NavbarCom :key="$route.path"/>
+  <div class="min-height">
+    <RouterView />
   </div>
+  <FooterCom/>
+  <GoTop/>
 </template>
 
+
 <script>
-  import { mapState, mapActions, mapWritableState } from 'pinia' 
-
-  
-  import { doc, setDoc, Timestamp, getFirestore, updateDoc} from "firebase/firestore"
-  const db = getFirestore()
-  export default {
-    data () {
-      return {
-        loading: true,
-      }
-    },
-    methods: {
-      async set() {
-        console.log(123)
-        await setDoc(doc(db, "cities", "LA"), {
-        name: "Los Angeles",
-        state: "CA",
-        country: "USA"
-        });
-      },
-      async edit() {
-        const washingtonRef = doc(db, "cities", "LA");
-        // Set the "capital" field of the city 'DC'
-        await updateDoc(washingtonRef, {
-          capital: true
-        });
-      },
+import NavbarCom from '@/components/NavbarCom.vue'
+import GoTop from '@/components/GoTop.vue'
+import FooterCom from '../components/FooterCom.vue'
 
 
-    },
-    created () {
-
-    }
-  }
+export default {
+  components: {
+    NavbarCom,
+    GoTop,
+    FooterCom, 
+  },
+  computed: {
+  },
+  methods: {
+  },
+  created () {
+    console.log(this.$route.name)
+  },
+}
 </script>
+
+<style lang="scss" scoped>
+.home-loading {
+  position: absolute;
+  z-index: 2000;
+  width: 100%;
+  min-height: 100vh;
+  background:  #F3F1E5;
+}
+.min-height {
+  min-height: calc(100vh - 207px);
+}
+</style>

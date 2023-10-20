@@ -1,0 +1,74 @@
+.fc-toolbar-title {
+  color: rgb(140,140,140) !important;
+  @media (max-width:992px) {
+    font-size: 20px !important;
+  }
+}
+.fc-button-primary {
+    color: rgb(140,140,140) !important;
+    background-color: #ffffff !important;
+    border-color: rgb(140,140,140) !important;
+    border-radius: 50rem !important;
+    &:hover{
+    background-color: rgb(140,140,140) !important;
+    color: #ffffff !important;
+    box-shadow: 0!important;
+  }
+}
+.fc-button {
+  .fc-icon {
+    vertical-align: middle !important;
+    font-size: 16px !important;
+    color: rgb(140,140,140);
+    padding-bottom: 20px;
+  }
+  &:hover{
+    background-color: rgb(140,140,140) !important;
+    color: #ffffff !important;
+    box-shadow: 0!important;
+    .fc-icon {
+      color: #ffffff !important;
+    }
+  }
+}
+.fc-button-active {
+  background-color: rgb(140,140,140) !important;
+  color: #ffffff !important;
+  box-shadow: 0!important;
+}
+.fc-button .fc-icon {
+
+
+}
+.fc-event {
+    position: relative;
+    font-size: 0.6em !important;
+    line-height: 1.4 !important;
+    border-radius: 5px;
+    color: #333333;
+    .fc-daygrid-event-dot {
+      display: inline-block !important;
+    }
+    .fc-event-time {
+      display: inline !important;
+    }
+    .fc-event-title {
+      padding-left: 4px;
+    }
+    @media (min-width:992px) {
+      display: block !important;
+    }
+}
+// 改行事曆內框和文字顏色
+.fc-col-header-cell-cushion {
+  color: rgb(140,140,140) !important;
+}
+.fc-daygrid-day-number {
+  color: rgb(140,140,140) !important;
+}
+.fc-list-day-text {
+  color: rgb(140,140,140) !important;
+}
+.fc-list-day-side-text {
+  color: rgb(140,140,140) !important;
+}

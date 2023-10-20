@@ -1,14 +1,31 @@
 <template>
-  <RouterView />
+  <!-- <div data-bs-theme="dark"> -->
+    <RouterView />
+  <!-- </div> -->
 </template>
-
 
 <script setup>
 
-
 </script>
 
+<style lang="scss">
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
 
-<style scoped lang="scss">
+::-webkit-scrollbar-track {
+    --webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 6px;
+}
 
+::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: #adb5bd;
+    --webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: #adb5bd;
+}
 </style>

@@ -12,7 +12,7 @@
 // 5. Include remainder of required parts
 @import "bootstrap/scss/maps";
 @import "bootstrap/scss/mixins";
-// @import "bootstrap/scss/root";
+@import "bootstrap/scss/root";
 
 // 6. Optionally include any other parts as needed
 @import "../scss/utils/utilities";
@@ -32,5 +32,8 @@
 @import "../scss/base/base";
 @import "../scss/base/font";
 @import "../scss/utils/helpers";
-
+@import "../scss/base/font";
+@import "../scss/components/swiper";
+@import "../scss/components/calender";
 @import "../scss/components/course-card";
+@import "../scss/components/banner";
