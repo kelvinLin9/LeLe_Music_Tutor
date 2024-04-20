@@ -13,7 +13,7 @@ console.log(axiosInstance.interceptors)
 
 // interceptors(攔截器) 目的是在發送請求前將 token 加入 headers 
 axiosInstance.interceptors.request.use((config) => {
-  const token = document.cookie.replace(/(?:(?:^|.*;\s*)typescript\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  const token = document.cookie.replace(/(?:(?:^|.*;\s*)music_tutor\s*=\s*([^;]*).*$)|^.*$/, '$1');
   if (token) {
     config.headers.Authorization = token;
   }
@@ -33,8 +33,8 @@ axiosInstance.interceptors.response.use((response) => {
 
 // Api 整理在這裡
 // User
-export const axiosLoginUser = (loginData) => axiosInstance.post('/user/login', loginData);
-export const axiosSignupUser = (signupData) => axiosInstance.post('/user/signup', signupData);
+export const axiosLoginUser = (loginData) => axiosInstance.post('/users/login', loginData);
+export const axiosSignupUser = (signupData) => axiosInstance.post('/users/signup', signupData);
 // export const axiosForgotPassword = (data) => axiosInstance.post('/user/forgot', data);
 // export const axiosCheckUser = () => axiosInstance.get('/user/check');
 // export const axiosGetUser = () => axiosInstance.get('/user');

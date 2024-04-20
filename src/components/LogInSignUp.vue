@@ -11,7 +11,7 @@
       </div>
       <div class="col-12 col-md-6 col-xl-4">
         <!-- 登入 -->
-        <div v-if="logInPage" class="login-wrap d-flex flex-column justify-content-center">
+        <div v-if="showLogInPage" class="login-wrap d-flex flex-column justify-content-center">
           <h1 class="mx-auto border-bottom my-16 pb-16 w-75 text-center fs-1">
             會員登入
           </h1>
@@ -25,7 +25,7 @@
           
           <VForm class="mx-auto w-75"
                 v-slot="{ errors }"
-                @submit="logIn()">
+                @submit="login()">
             <div class="mb-3">
               <label for="email" class="form-label ">
                 Email：
@@ -38,7 +38,7 @@
                 class="form-control fs-7"
                 :class="{ 'is-invalid': errors['email'] }"
                 placeholder="請輸入 Email"
-                v-model="logInForm.user.email"
+                v-model="loginData.email"
               />
               <ErrorMessage class="invalid-feedback" name="email"/>
             </div>
@@ -88,7 +88,7 @@
                 class="form-control fs-7"
                 :class="{ 'is-invalid': errors['密碼'] }"
                 placeholder="請輸入密碼"
-                v-model="logInForm.user.password"
+                v-model="loginData.password"
               />
               <ErrorMessage class="invalid-feedback" name="密碼"/>
             </div>
@@ -98,11 +98,10 @@
             <p class="mx-auto w-75 my-3 text-center fs-7 text-delete">
               還沒有帳號嗎?
               <a href="#" class="d-inline-block"
-                @click.prevent="logInPage = false">
+                @click.prevent="showLogInPage = false">
                  前往註冊
               </a>
             </p>
-            
           </VForm>
         </div>
         <!-- 註冊 -->
@@ -110,7 +109,7 @@
           <h1 class="mx-auto border-bottom my-3 pb-2 w-75 text-center">會員註冊</h1>
           <VForm class="mx-auto w-75"
           v-slot="{ errors }"
-          @submit="signUp()">
+          @submit="signup()">
             <div class="mb-3">
               <label for="displayName" class="form-label ">
                 姓名：
@@ -123,7 +122,7 @@
                 class="form-control fs-7"
                 :class="{ 'is-invalid': errors['姓名'] }"
                 placeholder="請輸入姓名"
-                v-model="signUpForm.user.displayName"
+                v-model="signupData.name"
               />
               <ErrorMessage class="invalid-feedback" name="姓名"/>
             </div>
@@ -139,7 +138,7 @@
                 class="form-control fs-7"
                 :class="{ 'is-invalid': errors['email'] }"
                 placeholder="請輸入 Email"
-                v-model="signUpForm.user.email"
+                v-model="signupData.email"
               />
               <ErrorMessage class="invalid-feedback" name="email"/>
             </div>
@@ -155,7 +154,7 @@
                 class="form-control fs-7"
                 :class="{ 'is-invalid': errors['密碼'] }"
                 placeholder="請輸入密碼"
-                v-model="signUpForm.user.password"
+                v-model="signupData.password"
               />
               <ErrorMessage class="invalid-feedback" name="密碼"/>
             </div>
@@ -171,7 +170,7 @@
                 class="form-control fs-7"
                 :class="{ 'is-invalid': errors['驗證密碼'] }"
                 placeholder="請再次輸入密碼"
-                v-model="signUpForm.user.confirmation"
+                v-model="signupData.confirmPassword"
               />
               <ErrorMessage class="invalid-feedback" name="驗證密碼"/>
             </div>
@@ -182,7 +181,7 @@
             <p class="mx-auto w-75 my-3 text-center fs-7 text-delete">
               已經有帳號?
               <a href="#" class="d-inline-block"
-                @click.prevent="logInPage = true">
+                @click.prevent="showLogInPage = true">
                  前往登入
               </a>
             </p>
@@ -194,32 +193,29 @@
 </template>
   
 
-<!-- <script setup>
+<script setup>
 import { watch, onMounted } from "vue";
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore()
-const { signupLoading } = storeToRefs(userStore)
+const { showLogInPage, signupLoading, loginLoading, loginData, signupData } = storeToRefs(userStore)
 const signup = userStore.signup
+const login = userStore.login
 
+</script>
 
-</script> -->
 <script>
 import { mapState, mapActions, mapWritableState } from 
 'pinia' 
 import logInStore from '../stores/loginStore';
-import goStore from '../stores/goStore';
-import dataStore from '../stores/dataStore';
 
 
 export default {
   computed: {
-    ...mapWritableState(logInStore, ['logInForm', 'signUpForm', 'logInPage', 'resetPasswordEmail'])
+    ...mapWritableState(logInStore, ['resetPasswordEmail'])
   },
   methods: {  
-    ...mapActions(goStore, ['goHomePage', 'goLoginPage']),
-    ...mapActions(logInStore, ['signUp', 'logIn', 'signInWithGoogle','updateProfile', 'signOut', 'sendPasswordResetEmail']),
-    ...mapActions(dataStore, [])
+    ...mapActions(logInStore, ['signInWithGoogle','updateProfile', 'signOut', 'sendPasswordResetEmail']),
   },
   created() {
 
