@@ -42,8 +42,8 @@ import "./assets/scss/all.scss";
 import { currency } from './methods/filters'
 
 //引入SweetAlert及其附帶的css
-import VueSweetalert2 from 'vue-sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+// import VueSweetalert2 from 'vue-sweetalert2';
+// import 'sweetalert2/dist/sweetalert2.min.css';
 // sweetalert2
 const options = {
   confirmButtonColor: '#ff715f',
@@ -94,7 +94,6 @@ app.config.globalProperties.$moment = moment
 app.use(createPinia())
 app.use(router)
 app.use(VueAxios, axios)
-app.use(VueSweetalert2, options)
 app.component('VField', Field);
 app.component('VForm', Form);
 app.component('ErrorMessage', ErrorMessage);

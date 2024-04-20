@@ -193,10 +193,21 @@
   </div>
 </template>
   
+
+<!-- <script setup>
+import { watch, onMounted } from "vue";
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/userStore';
+const userStore = useUserStore()
+const { signupLoading } = storeToRefs(userStore)
+const signup = userStore.signup
+
+
+</script> -->
 <script>
 import { mapState, mapActions, mapWritableState } from 
 'pinia' 
-import logInStore from '../stores/logInStore';
+import logInStore from '../stores/loginStore';
 import goStore from '../stores/goStore';
 import dataStore from '../stores/dataStore';
 

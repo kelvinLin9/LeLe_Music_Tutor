@@ -1,6 +1,6 @@
 import router from '../router'
 import { defineStore } from 'pinia'
-import logInStore from './logInStore'
+import logInStore from './loginStore'
 import dataStore from './dataStore'
 import courseCardStore from './courseCardStore'
 import filterStore from './filterStore'
