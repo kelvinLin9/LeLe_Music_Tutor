@@ -2,7 +2,13 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 import { Toast, Alert, Swal } from '@/mixins/swal';
-import { axiosSignupUser, axiosLoginUser, axiosCheckUser } from '@/api/userApi';
+import { 
+  axiosSignupUser,
+  axiosLoginUser,
+  axiosCheckUser,
+  axiosVerifyEmail,
+  axiosGenerateEmailCode,
+} from '@/api/userApi';
 
 export const useUserStore = defineStore('userStore', () => {
 
@@ -44,9 +50,6 @@ export const useUserStore = defineStore('userStore', () => {
       loginLoading.value = false;
     }
   };
-
-
-
 
   // signup
   const signupData = ref({
@@ -109,7 +112,85 @@ export const useUserStore = defineStore('userStore', () => {
     router.push('/')
   }
 
+  // forgot
+  const verifyEmail = async () => {
+    Swal.fire({
+      title: "請輸入您的Email",
+      input: "text",
+      inputAttributes: {
+        autocapitalize: "off"
+    },
+    confirmButtonText: "送出",
+    showLoaderOnConfirm: true,
+    preConfirm: async (email) => {
+      console.log(email)
+      const res = await axiosVerifyEmail(email)
+     if(res.data.result.isEmailExists) {
+      generateEmailCode(email)
+     } else {
+      Swal.fire({
+        title: "Email不存在",
+        text: "請確認Email",
+        icon: "error"
+      })
+     }
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+  })
+}
+const generateEmailCode = async (email) => {
+  try {
+    const res = await axiosGenerateEmailCode(email);
+    console.log('已將驗證信發送到您的信箱', res)
+    Swal.fire({
+      title: "已將驗證信發送到您的信箱",
+      text: "請設定新密碼",
+      icon: "success",
+      preConfirm: () => {
+        Swal.fire({
+          title: "請輸入新密碼及驗證碼",
+          html: `
+          <label for="swal-input1">請輸入驗證碼</label>
+          <input id="swal-input1" class="swal2-input">
+          <label for="swal-input2">請輸入新密碼</label>
+          <input id="swal-input2" class="swal2-input" type="password">
+        `,
+          inputAttributes: {
+            autocapitalize: "off"
+          },
+          confirmButtonText: "送出",
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            const code = document.getElementById("swal-input1")
+            const newPassword = document.getElementById("swal-input2")
+            console.log(newPassword.value, code.value)
 
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        })
+      }
+    })
+  } catch (error) {
+    console.log('generateEmailCode 失敗', error)
+    Swal.fire({
+      title: "發送驗證碼失敗",
+      // text: "",
+      icon: "error"
+    })
+  }
+}
+
+const forgotPassword = async () => {
+  try {
+    await forgotPassword();
+    Toast.fire({
+      icon: 'success',
+      title: '重置密碼郵件已發送，請檢查您的郵箱。'
+    });
+  } catch (error) {
+    //
+  }
+}
 
 
   return {
@@ -130,6 +211,11 @@ export const useUserStore = defineStore('userStore', () => {
 
     // logout
     logout,
+
+    // forgot
+    verifyEmail,
+    generateEmailCode,
+    forgotPassword,
   }
 
 })

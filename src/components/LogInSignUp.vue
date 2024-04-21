@@ -47,11 +47,13 @@
                 <label for="password" class="form-label">
                   密碼：
                 </label>
-                <a href="#" class="text-delete fs-7" @click.prevent data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <!-- <a href="#" class="text-delete fs-7" @click.prevent data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  忘記密碼
+                </a> -->
+                <a href="#" class="text-delete fs-7" @click.prevent="verifyEmail()">
                   忘記密碼
                 </a>
-
-
+                
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -209,6 +211,7 @@ const {
 const signup = userStore.signup
 const login = userStore.login
 const checkUser = userStore.checkUser
+const verifyEmail = userStore.verifyEmail
 
 onMounted(() => {
   checkUser()
