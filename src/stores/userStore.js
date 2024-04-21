@@ -2,7 +2,7 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 import { Toast, Alert, Swal } from '@/mixins/swal';
-import { axiosSignupUser, axiosLoginUser } from '@/api/userApi';
+import { axiosSignupUser, axiosLoginUser, axiosCheckUser } from '@/api/userApi';
 
 export const useUserStore = defineStore('userStore', () => {
 
@@ -85,6 +85,32 @@ export const useUserStore = defineStore('userStore', () => {
     signupData.value.confirmPassword = '';
   }
 
+  // check
+  const isChecked = ref(false);
+  const checkUser = async () => {
+    try {
+      const res = await axiosCheckUser();
+      isChecked.value = res.data.status;
+      console.log('checkUser 驗證成功', isChecked.value);
+    } catch (error) {
+      isChecked.value = false;
+      console.log('checkUser 驗證失敗', isChecked.value);
+    }
+  }
+
+  // logout
+  const logout = () => {
+    document.cookie = `typescript=`;
+    // isChecked.value = false;
+    Toast.fire({
+      icon: 'success',
+      title: '已登出'
+    })
+    router.push('/')
+  }
+
+
+
 
   return {
     // login
@@ -97,6 +123,13 @@ export const useUserStore = defineStore('userStore', () => {
     signupLoading,
     signupData,
     signup,
+
+    // check
+    isChecked,
+    checkUser,
+
+    // logout
+    logout,
   }
 
 })

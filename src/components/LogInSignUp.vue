@@ -92,8 +92,8 @@
               />
               <ErrorMessage class="invalid-feedback" name="密碼"/>
             </div>
-            <button type="submit" class="btn btn-dark d-block mx-auto py-3 w-100">
-              登入
+            <button type="submit" class="btn btn-dark d-block mx-auto py-3 w-100 d-flex justify-content-center">
+              <span>登入</span><ButtonLoading v-if="loginLoading"/>
             </button>
             <p class="mx-auto w-75 my-3 text-center fs-7 text-delete">
               還沒有帳號嗎?
@@ -175,8 +175,8 @@
               <ErrorMessage class="invalid-feedback" name="驗證密碼"/>
             </div>
 
-            <button type="submit" class="btn btn-dark d-block mx-auto py-3 w-100">
-              註冊
+            <button type="submit" class="btn btn-dark d-block mx-auto py-3 w-100 d-flex justify-content-center">
+              <span>註冊</span><ButtonLoading v-if="signupLoading"/>
             </button>
             <p class="mx-auto w-75 my-3 text-center fs-7 text-delete">
               已經有帳號?
@@ -194,22 +194,31 @@
   
 
 <script setup>
+import ButtonLoading from "@/components/widgets/ButtonLoading.vue";
 import { watch, onMounted } from "vue";
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore()
-const { showLogInPage, signupLoading, loginLoading, loginData, signupData } = storeToRefs(userStore)
+const { 
+  showLogInPage,
+  signupLoading, 
+  loginLoading,
+  loginData,
+  signupData,
+  isChecked } = storeToRefs(userStore)
 const signup = userStore.signup
 const login = userStore.login
+const checkUser = userStore.checkUser
 
+onMounted(() => {
+  checkUser()
+})
 </script>
 
 <script>
 import { mapState, mapActions, mapWritableState } from 
 'pinia' 
 import logInStore from '../stores/loginStore';
-
-
 export default {
   computed: {
     ...mapWritableState(logInStore, ['resetPasswordEmail'])
@@ -217,9 +226,6 @@ export default {
   methods: {  
     ...mapActions(logInStore, ['signInWithGoogle','updateProfile', 'signOut', 'sendPasswordResetEmail']),
   },
-  created() {
-
-  }
 }
 </script>
 

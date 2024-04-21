@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-// import '@sweetalert2/theme-dark/dark.scss'
+import '@sweetalert2/theme-dark/dark.scss'
 
 const Toast = Swal.mixin({
   toast: true,
-  position: "bottom-end",
+  position: "top-end",
   showConfirmButton: false,
   timer: 2000,
   timerProgressBar: true,

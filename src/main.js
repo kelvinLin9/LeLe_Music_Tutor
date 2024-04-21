@@ -36,18 +36,12 @@ import App from './App.vue'
 import router from './router'
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import "./assets/scss/all.scss";
+import "./style/all.scss";
 
 // 金額
 import { currency } from './methods/filters'
 
-//引入SweetAlert及其附帶的css
-// import VueSweetalert2 from 'vue-sweetalert2';
-// import 'sweetalert2/dist/sweetalert2.min.css';
-// sweetalert2
-const options = {
-  confirmButtonColor: '#ff715f',
-}
+
 
 //firebase
 import { initializeApp } from 'firebase/app';
