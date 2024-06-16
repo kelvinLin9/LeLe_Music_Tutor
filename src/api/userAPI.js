@@ -4,16 +4,18 @@ import axios from 'axios';
 
 export const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_URL}`,
-  headers: {
-    'Content-Type': 'application/json', 
-  },
+  // headers: {
+  //   // 'Content-Type': 'application/json', 
+  //   // 'Content-Type': 'multipart/form-data',
+  // },
 });
 
-console.log(axiosInstance.interceptors) 
+// console.log(axiosInstance.interceptors) 
 
 // interceptors(攔截器) 目的是在發送請求前將 token 加入 headers 
 axiosInstance.interceptors.request.use((config) => {
   const token = document.cookie.replace(/(?:(?:^|.*;\s*)music_tutor\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  // console.log(token)
   if (token) {
     config.headers.Authorization = token;
   }
@@ -33,18 +35,25 @@ axiosInstance.interceptors.response.use((response) => {
 
 // Api 整理在這裡
 // User
-export const axiosLoginUser = (loginData) => axiosInstance.post('/users/login', loginData);
-export const axiosSignupUser = (signupData) => axiosInstance.post('/users/signup', signupData);
+export const axiosLogin= (loginData) => axiosInstance.post('/users/login', loginData);
+export const axiosSignup = (signupData) => axiosInstance.post('/users/signup', signupData);
 export const axiosForgotPassword = (data) => axiosInstance.post('/users/forgot', data);
-export const axiosCheckUser = () => axiosInstance.get('/users/check');
-// export const axiosGetUser = () => axiosInstance.get('/users');
-// export const axiosEditUser = (userData) => axiosInstance.put('/users', userData);
+export const axiosCheck = () => axiosInstance.get('/users/check');
+export const axiosGetUser = () => axiosInstance.get(`/users/profile`);
+export const axiosUploadFile = () => axiosInstance.post('/upload/file');
+export const axiosEditUser = (userData) => axiosInstance.put('/users', userData);
 
 // Verify
-export const axiosVerifyEmail = (email) => axiosInstance.post('/verify/email', { email });
-export const axiosGenerateEmailCode = (email) => axiosInstance.post('/verify/generateEmailCode', { email });
+// export const axiosVerifyEmail = (email) => axiosInstance.post('/verify/email', { email });
+// export const axiosGenerateEmailCode = (email) => axiosInstance.post('/verify/generateEmailCode', { email });
 
-// News(已修正 待整理)
+// Courses
+export const axiosGetCourses = () => axiosInstance.get('/courses');
+export const axiosGetCourse = (id) => axiosInstance.get(`/courses/${id}`);
+export const axiosEditCourse = (courseData) => axiosInstance.put(`/courses/${courseData._id}`, courseData);
+export const axiosAddCourse = (courseData) => axiosInstance.post('/courses', courseData);
+export const axiosDeleteCourse = (id) => axiosInstance.delete(`/courses/${id}`);
+
 
 // Culinary
 
@@ -53,6 +62,9 @@ export const axiosGenerateEmailCode = (email) => axiosInstance.post('/verify/gen
 
 // Orders(已修正 待整理)
 
+// Admin/User
+export const axiosAdminGetUsers = () => axiosInstance.get('/admin/users');
+export const axiosAdminEditUser = (userData) => axiosInstance.put('admin/users', userData);
 // Admin/News(已修正 待整理)
 
 // Admin/Culinary
