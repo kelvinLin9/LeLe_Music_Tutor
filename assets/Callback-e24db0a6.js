@@ -1,0 +1,1 @@
+import{ay as r,L as t,o as s,c}from"./index-4c4afcbf.js";import{u as n}from"./user-80e64dcc.js";import"./sweetalert2-7ce81659.js";const i={__name:"Callback",setup(a){const o=r(),e=n().googleLogin;return t(()=>{console.log(o.query.code),e({code:o.query.code})}),(l,m)=>(s(),c("div"))}};export{i as default};
