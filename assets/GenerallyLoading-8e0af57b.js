@@ -1,1 +1,0 @@
-import{_ as a,r as o,o as s,c as r,k as t,d as c,e as _,F as d}from"./index-02cc172a.js";const l={};function i(m,p){const e=o("el-skeleton");return s(),r(d,null,t(3,n=>c("div",{class:"d-flex align-items-center border-0 rounded-2 mb-3 p-3",key:n},[_(e,{rows:1,animated:""})])),64)}const b=a(l,[["render",i],["__scopeId","data-v-dbcb6a40"]]);export{b as G};

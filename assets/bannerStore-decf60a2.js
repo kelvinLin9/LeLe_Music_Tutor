@@ -1,1 +1,0 @@
-import{a1 as o}from"./index-02cc172a.js";const b=o("bannerStore",{state:()=>({bgUrl:"",banner:{title:"",text:"",footer:""}}),actions:{getBannerInfo(t,e,n,r){this.bgUrl=t,this.banner.title=e,this.banner.text=n,this.banner.footer=r}}});export{b};
