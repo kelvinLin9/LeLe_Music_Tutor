@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
-  history: createWebHistory(/#/),
+  history: createWebHistory('/LeLe_Music_Tutor/'),
   routes: [
     {
       path: '/',
@@ -95,15 +95,14 @@ const router = createRouter({
       ],
     },
     {
-      path: '/UserLogin',
-      name: 'UserLogin',
-      component: () => import('../views/user/UserLogin.vue')
+      path: '/userLogin',
+      name: 'userLogin',
+      component: () => import('../views/Login.vue')
     },
     {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../views/admin/AdminView.vue'),
-      children:[]
+      path: '/callback',
+      name: 'Callback',
+      component: () => import('../views/Callback.vue')
     },
     {
       path: '/:pathMatch(.*)*',

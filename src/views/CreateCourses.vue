@@ -1,30 +1,59 @@
 <template>
-  <BannerCom />
+  <Banner 
+    :bgUrl="bannerData.bgUrl"
+    :title="bannerData.title"
+    :text="bannerData.text"
+    :footer="bannerData.footer"
+  />
   <ProgressBar />
   <RouterView />
 </template>
 
-<script>
-import BannerCom from '../components/BannerCom.vue'
-import ProgressBar from '../components/ProgressBar.vue'
-import { mapState, mapActions, mapWritableState } from 
-'pinia'  
-import dataStore from '@/stores/dataStore'
+<script setup>
+import Banner from '../components/Banner.vue';
+import ProgressBar from '../components/ProgressBar.vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { storeToRefs } from "pinia"
+import { useCourseStore } from '@/stores/course.js'
 
+const route = useRoute();
+const courseStore = useCourseStore()
+const { courseTemp, createCourseStep } = storeToRefs(courseStore)
 
-export default {
-  components: { BannerCom, ProgressBar },
-  computed: {
-  
-  },
-  methods: {
-    ...mapActions(dataStore, ['onAuthStateChanged']),
-  },
-  created () {
+const bannerData = computed(() => {
+  const basePath = '../assets/images/';
+  const banners = {
+    '/CreateCourses/BeATeacherStep1': {
+      bgUrl: new URL(basePath + 'banner.jpg', import.meta.url).href,
+      title: '課程資訊',
+      text: 'INFORMATION',
+      footer: '填寫課程資訊，讓學生輕鬆找到您的課程'
+    },
+    '/CreateCourses/BeATeacherStep2': {
+      bgUrl: new URL(basePath + 'banner.jpg', import.meta.url).href,
+      title: '課程介紹',
+      text: 'INTRODUCTION',
+      footer: '介紹課程內容，為學生營造期待感'
+    },
+    '/CreateCourses/BeATeacherStep3': {
+      bgUrl: new URL(basePath + 'banner.jpg', import.meta.url).href,
+      title: '頁面預覽',
+      text: 'PREVIEW',
+      footer: '預覽課程頁面，確保效果完美呈現'
+    },
+    '/CreateCourses/BeATeacherStep4': {
+      bgUrl: new URL(basePath + 'banner.jpg', import.meta.url).href,
+      title: '完成',
+      text: 'COMPLETE',
+      footer: '準備好了!您的課程將準備好在平台上展示'
+    }
+  };
 
-  }
-}
+  return banners[route.path] || banners['/CreateCourses/BeATeacherStep1'];
+});
 </script>
+
 
 <style lang="scss" scoped>
 // .timeline {

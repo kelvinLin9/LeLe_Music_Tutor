@@ -478,17 +478,17 @@ export default defineStore('dataStore', {
     async onAuthStateChanged() {
       onAuthStateChanged(auth, (user) => {
         console.log('user端資料', user)
-        if (user) {
-          this.user = user;
-          this.isMember = true
-          this.getTeacherFirebaseData()
-          this.getStudentFirebaseData()
-          this.getAllCoursesFirebaseData()
-        } else {
-          this.isMember = false
-          this.getAllCoursesFirebaseData()
-          console.log('已登出')
-        }
+        // if (user) {
+        //   this.user = user;
+        //   this.isMember = true
+        //   this.getTeacherFirebaseData()
+        //   this.getStudentFirebaseData()
+        //   this.getAllCoursesFirebaseData()
+        // } else {
+        //   this.isMember = false
+        //   this.getAllCoursesFirebaseData()
+        //   console.log('已登出')
+        // }
       });
      },
      // 判斷完是否登入後，讀取用戶老師端學生端資料(開課頁面用)
@@ -496,7 +496,7 @@ export default defineStore('dataStore', {
       onAuthStateChanged(auth, (user) => {
         if (!user) {
           this.isMember = false
-          router.push('/UserLogin')
+          router.push('/userLogin')
           console.log('已登出') 
         } else {
           this.user = user;

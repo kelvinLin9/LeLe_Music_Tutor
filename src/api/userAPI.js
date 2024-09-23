@@ -3,7 +3,7 @@ import axios from 'axios';
 // import { Alert } from '@/mixins/swal';
 
 export const axiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_URL}`,
+  baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
   // headers: {
   //   // 'Content-Type': 'application/json', 
   //   // 'Content-Type': 'multipart/form-data',
@@ -14,8 +14,8 @@ export const axiosInstance = axios.create({
 
 // interceptors(攔截器) 目的是在發送請求前將 token 加入 headers 
 axiosInstance.interceptors.request.use((config) => {
-  const token = document.cookie.replace(/(?:(?:^|.*;\s*)music_tutor\s*=\s*([^;]*).*$)|^.*$/, '$1');
-  // console.log(token)
+  const token = localStorage.getItem('lele_music_tutor_token');
+  console.log(token)
   if (token) {
     config.headers.Authorization = token;
   }
@@ -38,33 +38,47 @@ axiosInstance.interceptors.response.use((response) => {
 export const axiosLogin= (loginData) => axiosInstance.post('/users/login', loginData);
 export const axiosSignup = (signupData) => axiosInstance.post('/users/signup', signupData);
 export const axiosForgotPassword = (data) => axiosInstance.post('/users/forgot', data);
-export const axiosCheck = () => axiosInstance.get('/users/check');
+export const axiosCheckUser = () => axiosInstance.get('/users/check');
 export const axiosGetUser = () => axiosInstance.get(`/users/profile`);
 export const axiosUploadFile = () => axiosInstance.post('/upload/file');
 export const axiosEditUser = (userData) => axiosInstance.put('/users', userData);
+
+// google
+export const axiosGoogleLogin = (googleToken) => axiosInstance.post('/users/googleClient/callback', googleToken);
 
 // Verify
 // export const axiosVerifyEmail = (email) => axiosInstance.post('/verify/email', { email });
 // export const axiosGenerateEmailCode = (email) => axiosInstance.post('/verify/generateEmailCode', { email });
 
 // Courses
-export const axiosGetCourses = () => axiosInstance.get('/courses');
+export const axiosGetCourses = (params) => axiosInstance.get('/courses', {params: params});
 export const axiosGetCourse = (id) => axiosInstance.get(`/courses/${id}`);
 export const axiosEditCourse = (courseData) => axiosInstance.put(`/courses/${courseData._id}`, courseData);
 export const axiosAddCourse = (courseData) => axiosInstance.post('/courses', courseData);
 export const axiosDeleteCourse = (id) => axiosInstance.delete(`/courses/${id}`);
 
+// Orders
+export const axiosGetOrders = (params) => axiosInstance.get('/orders',{params: params});
+export const axiosGetOrder = (id) => axiosInstance.get(`/orders/${id}`);
+export const axiosAddOrder = (orderData) => axiosInstance.post('/orders', orderData);
+export const axiosEditOrder = (orderData) => axiosInstance.put(`/orders/${orderData._id}`, orderData);
+export const axiosDeleteOrder = (id) => axiosInstance.delete(`/orders/${id}`);
 
-// Culinary
+// Coupons
+export const axiosGetCoupons = (params) => axiosInstance.get('/coupons', {params: params});
+export const axiosGetCoupon = (id) => axiosInstance.get(`/coupons/${id}`);
+export const axiosAddCoupon = (couponData) => axiosInstance.post('/coupons', couponData);
+export const axiosEditCoupon = (couponData) => axiosInstance.put(`/coupons/${couponData._id}`, couponData);
+export const axiosDeleteCoupon = (id) => axiosInstance.delete(`/coupons/${id}`);
 
-// Rooms(已修正 待整理)
-// export const axiosGetRooms = () => axiosInstance.get('/room')
 
-// Orders(已修正 待整理)
 
 // Admin/User
-export const axiosAdminGetUsers = () => axiosInstance.get('/admin/users');
+export const axiosAdminGetUsers = (params) => axiosInstance.get('/admin/users',{
+  params: params,
+});
 export const axiosAdminEditUser = (userData) => axiosInstance.put('admin/users', userData);
+export const axiosAdminDeleteUser = (id) => axiosInstance.delete(`/admin/users/${id}`);
 // Admin/News(已修正 待整理)
 
 // Admin/Culinary

@@ -35,12 +35,13 @@
     "sweetalert2": "^11.10.3",
     "swiper": "^10.0.4",
     "tippy.js": "^6.3.7",
-    "vee-validate": "^4.12.4",
+    "vee-validate": "^4.13.2",
     "vue": "^3.3.4",
     "vue-axios": "^3.5.2",
     "vue-bootstrap-icons": "^0.2.4",
     "vue-flatpickr-component": "^11.0.3",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

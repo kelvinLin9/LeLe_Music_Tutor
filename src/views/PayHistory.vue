@@ -49,7 +49,7 @@
 
 <script>
 import { mapState, mapActions } from 'pinia'
-import BannerCom from '../components/BannerCom.vue'
+import BannerCom from '../components/Banner.vue'
 import GenerallyLoading from '../components/GenerallyLoading.vue'
 import dataStore from '@/stores/dataStore'
 import bannerStore from '@/stores/bannerStore'

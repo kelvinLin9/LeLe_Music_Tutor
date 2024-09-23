@@ -23,22 +23,22 @@
             4
           </div> -->
           <div class="circle fw-bold position-relative"
-          :class="{ 'active': createCourseStep > 0}">
+          :class="{ 'active': createCourseStep === 1}">
             <span class="material-symbols-outlined fs-2">edit_document</span>
             <span class="progress-bar-text position-absolute position-absolute text-dark text-center w-100 fs-8 fs-md-6">填寫資訊</span>
           </div>
           <div class="circle fw-bold position-relative"
-          :class="{ 'active': createCourseStep > 1}">
+          :class="{ 'active': createCourseStep === 2}">
             <span class="material-symbols-outlined fs-2">contract_edit</span>
             <span class="progress-bar-text position-absolute position-absolute text-dark text-center w-100 fs-8 fs-md-6">課程介紹</span>
           </div>
           <div class="circle fw-bold position-relative"
-          :class="{ 'active': createCourseStep > 2}">
+          :class="{ 'active': createCourseStep === 3}">
             <span class="material-symbols-outlined fs-2">preview</span>
             <span class="progress-bar-text position-absolute position-absolute text-dark text-center w-100 fs-8 fs-md-6">預覽頁面</span>
           </div>
           <div class="circle fw-bold position-relative"
-          :class="{ 'active': createCourseStep > 3}">
+          :class="{ 'active': createCourseStep === 4}">
             <span class="material-symbols-outlined fs-2">task_alt</span>
             <span class="progress-bar-text position-absolute position-absolute text-dark text-center w-100 fs-8 fs-md-6">開課完成</span>
           </div>
@@ -48,23 +48,12 @@
   </div>
 </template>
 
-<script>
-import { mapState } from 
-'pinia'  
-import dataStore from '@/stores/dataStore'
+<script setup>
+import { storeToRefs } from "pinia"
+import { useCourseStore } from '@/stores/course.js'
 
-
-export default {
-  computed: {
-  ...mapState(dataStore, ['createCourseStep'])
-  },
-  methods: {
-
-  },
-  created () {
-
-  }
-}
+const courseStore = useCourseStore()
+const { createCourseStep } = storeToRefs(courseStore)
 </script>
 
 

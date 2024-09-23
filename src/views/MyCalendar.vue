@@ -89,7 +89,7 @@
 <script>
 
 
-import BannerCom from '../components/BannerCom.vue'
+import BannerCom from '../components/Banner.vue'
 import { mapState, mapActions } from 
 'pinia'  
 import dataStore from '@/stores/dataStore'

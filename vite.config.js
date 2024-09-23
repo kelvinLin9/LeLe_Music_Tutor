@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  base: '/LeLe_music_tutor/',
+  base: '/LeLe_Music_Tutor/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

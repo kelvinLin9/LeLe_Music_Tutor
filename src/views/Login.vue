@@ -15,17 +15,20 @@
           <h1 class="mx-auto border-bottom my-16 pb-16 w-75 text-center fs-1">
             會員登入
           </h1>
-          <button type="button" 
-                  class="btn btn-outline-dark d-block mx-auto py-16 d-flex justify-content-center w-75"
-                  @click="signInWithGoogle()">
+          <button 
+            type="button" 
+            class="btn btn-outline-dark d-block mx-auto py-16 d-flex justify-content-center w-75"
+            @click="signInWithGoogle()"
+            :disabled="loginLoading"
+          >
             <img src="../assets/images/google-icon.png" alt="google icon" class="google-icon me-2">
-            <span class="google-login-text">使用 Google 登入</span>
+            <span class="google-login-text">使用 Google 登入</span><ButtonLoading color="#000000" v-if="loginLoading"/>
           </button>
           <hr class="mx-auto w-75 mt-16 text-center fs-7 login-hr">
           
           <VForm class="mx-auto w-75"
                 v-slot="{ errors }"
-                @submit="login()">
+                @submit="submitLogin()">
             <div class="mb-3">
               <label for="email" class="form-label ">
                 Email：
@@ -111,7 +114,7 @@
           <h1 class="mx-auto border-bottom my-3 pb-2 w-75 text-center">會員註冊</h1>
           <VForm class="mx-auto w-75"
           v-slot="{ errors }"
-          @submit="signup()">
+          @submit="submitSignup()">
             <div class="mb-3">
               <label for="displayName" class="form-label ">
                 姓名：
@@ -197,39 +200,61 @@
 
 <script setup>
 import ButtonLoading from "@/components/widgets/ButtonLoading.vue";
-import { watch, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from 'pinia';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
 const { 
   showLogInPage,
   signupLoading, 
   loginLoading,
-  loginData,
-  signupData,
   isChecked } = storeToRefs(userStore)
 const signup = userStore.signup
 const login = userStore.login
 const checkUser = userStore.checkUser
-// const verifyEmail = userStore.verifyEmail
+const verifyEmail = userStore.verifyEmail
+const resetPasswordEmail = userStore.resetPasswordEmail
 
-onMounted(() => {
-  checkUser()
-})
-</script>
+const loginData = ref({
+  email: '',
+  password: ''
+});
 
-<script>
-import { mapState, mapActions, mapWritableState } from 
-'pinia' 
-import logInStore from '../stores/loginStore';
-export default {
-  computed: {
-    ...mapWritableState(logInStore, ['resetPasswordEmail'])
-  },
-  methods: {  
-    ...mapActions(logInStore, ['signInWithGoogle','updateProfile', 'signOut', 'sendPasswordResetEmail']),
-  },
+const submitLogin = async() => {
+  const res = await login(loginData.value);
+  console.log(res);
+  if (res) {
+    loginData.value = {
+      email: '',
+      password: ''
+    };
+  }
+};
+
+const signupData = ref({
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+});
+const submitSignup = () => {
+  signup(signupData.value);
+  signupData.value = {
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  };
+};
+
+const signInWithGoogle = () => {
+  loginLoading.value = true;
+  console.log(`${window.location.origin + '/callback'}`)
+  const callbackURL = `${window.location.origin + import.meta.env.VITE_BASE_URL +  'callback'}`;
+  console.log(`${import.meta.env.VITE_GOOGLE_CALLBACK_URL + callbackURL}`);
+  window.location.href = `${import.meta.env.VITE_GOOGLE_CALLBACK_URL + callbackURL}`
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -243,7 +268,7 @@ export default {
     z-index: 10;
     left: 20px;
     top: 10px;
-    background-image: url(../assets/images/LOGO.png);
+    background-image: url(../assets/images/logo.png);
     background-size: cover;
     background-position: center center;
     display: block;

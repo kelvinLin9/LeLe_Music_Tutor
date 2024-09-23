@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+
 
 // 引入 VeeValidate 元件跟功能
 import {
@@ -87,7 +86,6 @@ app.config.globalProperties.$filters = {
 app.config.globalProperties.$moment = moment
 app.use(createPinia())
 app.use(router)
-app.use(VueAxios, axios)
 app.component('VField', Field);
 app.component('VForm', Form);
 app.component('ErrorMessage', ErrorMessage);

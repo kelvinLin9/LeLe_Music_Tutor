@@ -246,7 +246,7 @@
 <script>
 import PaginationCom from '../components/PaginationCom.vue'
 import CoursesLoading from '../components/CoursesLoading.vue'
-import BannerCom from '../components/BannerCom.vue'
+import BannerCom from '../components/Banner.vue'
 import CourseCard from '../components/CourseCard.vue'
 import { mapState, mapActions, mapWritableState } from 
 'pinia'  
