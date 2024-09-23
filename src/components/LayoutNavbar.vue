@@ -47,8 +47,8 @@
               </RouterLink>
             </li>
             <li v-if="!userInfo.role" class="nav-item fs-5">
-              <RouterLink to="/userLogin" class="nav-link"
-                :class="{ 'text-primary': $route.name === 'userLogin'}">
+              <RouterLink to="/login" class="nav-link"
+                :class="{ 'text-primary': $route.name === 'login'}">
                 登入
               </RouterLink> 
             </li>
@@ -81,7 +81,7 @@
               <button class="btn dropdown-toggle text-primary ps-0 ps-lg-2 border-0"
                       type="button" id="dropdownLogin" 
                       data-bs-toggle="dropdown" aria-expanded="false"
-                      :class="{ 'text-primary': $route.name === 'userLogin'}">
+                      :class="{ 'text-primary': $route.name === 'login'}">
                 <img 
                   v-if="userInfo.photo" 
                   :src="userInfo.photo" 
@@ -102,7 +102,7 @@
                 <li><RouterLink to="/MyCalendar" class="dropdown-item">行事曆</RouterLink></li>
                 <li><RouterLink to="/AccountSetting" class="dropdown-item">帳戶設定</RouterLink></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#" @click.prevent="signOut">登出</a></li>
+                <li><a class="dropdown-item" href="#" @click.prevent="logout">登出</a></li>
               </ul>
             </li>
           </ul>
@@ -125,7 +125,8 @@ import { useUserStore } from '@/stores/user.js'
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
-
+const logout = userStore.logout
+const googleLogin = userStore.googleLogin
 
 
 const route = useRoute();
@@ -149,7 +150,7 @@ const toggleMenu = () => {
 //   goStore.goBookmark();
 // };
 
-// const { signOut } = logInStore;
+// const { logout } = logInStore;
 
 </script>
 

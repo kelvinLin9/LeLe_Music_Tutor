@@ -47,7 +47,7 @@ const bannerData = computed(() => {
       title: '完成',
       text: 'COMPLETE',
       footer: '準備好了!您的課程將準備好在平台上展示'
-    }
+    },
   };
 
   return banners[route.path] || banners['/CreateCourses/BeATeacherStep1'];

@@ -496,7 +496,7 @@ export default defineStore('dataStore', {
       onAuthStateChanged(auth, (user) => {
         if (!user) {
           this.isMember = false
-          router.push('/userLogin')
+          router.push('/login')
           console.log('已登出') 
         } else {
           this.user = user;

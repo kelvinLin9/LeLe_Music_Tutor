@@ -74,26 +74,35 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapActions, mapWritableState } from 
-'pinia'  
-import dataStore from '@/stores/dataStore'
-import paginationStore from '@/stores/paginationStore'
-import filterStore from '@/stores/filterStore'
+<script setup>
+import { storeToRefs } from 'pinia'
+import { usePaginationStore } from '@/stores/paginationStore'
+import { useFilterStore } from '@/stores/filterStore'
 
+// 初始化 stores
+const paginationStore = usePaginationStore()
+const filterStore = useFilterStore()
 
-export default {
-  computed: {
-    ...mapWritableState(paginationStore, ['page']),
-    ...mapState(filterStore, ['filterData']),
-  },
-  methods: {
-    ...mapActions(paginationStore, ['pagination']),    
-  },
-  mounted () {
+// 解構需要的狀態和方法
+const { page } = storeToRefs(paginationStore)
+const { filterData } = storeToRefs(filterStore)
 
-  }
-}
+// 解構需要的方法
+const { pagination } = paginationStore
+
+// 如果需要在組件掛載時執行某些操作，可以使用 onMounted 鉤子
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  // 在這裡添加需要在 mounted 鉤子中執行的代碼
+})
+
+// 如果需要定義其他的響應式數據或方法，可以在這裡添加
+// const someMethod = () => {
+//   // 方法實現
+// }
+
+// 所有需要在模板中使用的變量和方法都會自動暴露給模板
 </script>
 
 <style lang="scss" scoped>

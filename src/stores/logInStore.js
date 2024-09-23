@@ -60,7 +60,7 @@ export default defineStore('logInStore', {
   actions: {
    signOut() {
     signOut(auth)
-    router.push('/userLogin')
+    router.push('/login')
     data.courseData={}
     data.user = {}
     data.isMember = false

@@ -18,7 +18,7 @@ const checkUser = userStore.checkUser
 onMounted(() =>{
   console.log(route.query.token)
   if(route.query.token) {
-    localStorage.setItem('lele_music_tutor_token', route.query.token);
+    localStorage.setItem('music_tutor_beta', route.query.token);
     checkUser()
   }
 })

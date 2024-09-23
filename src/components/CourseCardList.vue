@@ -3,46 +3,46 @@
       v-for="item in courseCardData" :key="item.id">
     <div class="meta cursor-pointer" 
         @click="goCoursePage(item.id)">
-      <div class="photo" :style="{backgroundImage: `url(${item.data.courseImg})`}"></div>
+      <div class="photo" :style="{backgroundImage: `url(${item.img})`}"></div>
       <ul class="details d-flex flex-column">
         <li class="fs-6">
           <i class="bi bi-tags me-6"></i>
-          {{ item.data.courseCategory }}
+          {{ item.category }}
         </li>
         <li class="mt-auto fs-5">
-          <i class=""
+          <!-- <i class=""
           :class="bookmarkState(item.id)"
           @click.stop="toggleBookmark(item.id)"
           data-bs-toggle="tooltip"
           data-bs-placement="top"
           title="加入 / 移除收藏"
-          ></i>
+          ></i> -->
         </li>
       </ul>
     </div>
     <div class="description cursor-pointer"
         @click="goCoursePage(item.id)">
       <h2 class="fs-5 fw-bold d-flex">
-        {{ item.data.courseName }}
-        <i class="ms-auto d-sm-none"
+        {{ item.name }}
+        <!-- <i class="ms-auto d-sm-none"
           :class="bookmarkState(item.id)"
           @click.stop="toggleBookmark(item.id)"
           data-bs-toggle="tooltip"
           data-bs-placement="top"
           title="加入 / 移除收藏"
-          ></i>
+          ></i> -->
       </h2>
-      <h3 class="fs-6">by {{ item.data.displayName }}</h3>
+      <h3 class="fs-6">by {{ item.name }}</h3>
       <p class="d-flex align-items-center"> 
           <span class="material-symbols-outlined fs-6 me-4">timer</span>
-          {{ item.data.time }}
+          {{ item.minutes }}
           <span class="material-symbols-outlined fs-6 ms-8 me-4">map</span>
-          {{ item.data.cityName || '線上' }}
+          {{ item.place || '線上' }}
           <span class="material-symbols-outlined fs-6 ms-8 me-4">group</span>
-          {{ item.data.whoBuy.length}}
+          <!-- {{ item.data.whoBuy.length}} -->
         </p>
       <p class="d-flex justify-content-between align-items-center">
-        <span class="fs-5 fw-bold">NT$ {{ $filters.currency(item.data.price) }}</span>
+        <span class="fs-5 fw-bold">NT$ {{ $filters.currency(item.price) }}</span>
         <button v-if="myCoursesState === 'teacher'"
           type="button" class="btn btn-outline-primary border-0 fw-bold"
           data-bs-toggle="modal" data-bs-target="#SetUpClassSchedule"
@@ -62,51 +62,47 @@
   </div>  
 </template>
 
-<script>
-import { mapState, mapActions, mapWritableState } from 
-'pinia'  
-import courseCardStore from '@/stores/courseCardStore'
-import dataStore from '@/stores/dataStore'
-import filterStore from '@/stores/filterStore'
-import goStore from '@/stores/goStore'
+<script setup>
+import { computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-  watch: {
-    // 所有課程頁面用(為了搜尋排序)
-    currentPageCoursesData() {
-      if (this.$router.currentRoute.value.fullPath === '/AllCourses'){
-        this.courseCardData = this.currentPageCoursesData
-      }
-    },
-    // 為了收藏頁變動時能重新渲染
-    userBookmarkCourses () {
-      if (this.$router.currentRoute.value.fullPath === '/MyCourses' && this.myCoursesState === 'bookmark')
-      this.courseCardData = this.userBookmarkCourses
-    }
+const props = defineProps({
+  courseCardData: {
+    type: Array,
+    required: true
   },
-  computed: {
-    ...mapState(dataStore, ['bookmarkState', 'userTeacherCourses', 'userStudentCourses', 'userBookmarkCourses']),
-    ...mapWritableState(dataStore, ['myCoursesState', 'classScheduleData']),
-    ...mapWritableState(courseCardStore, ['courseCardData']),
-    ...mapState(filterStore, ['currentPageCoursesData']),
-  },
-  methods: {
-    ...mapActions(dataStore, ['SetUpTeacherClassSchedule', 'lookStudentClassSchedule', 'toggleBookmark']),
-    ...mapActions(goStore, ['goCoursePage']),
-    
-  },
-  created () {
-    if (this.$router.currentRoute.value.fullPath === '/AllCourses') {
-      this.courseCardData = this.currentPageCoursesData
-    } else if (this.$router.currentRoute.value.fullPath === '/MyCourses') {
-      if (this.myCoursesState === 'bookmark') {
-      this.courseCardData = this.userBookmarkCourses
-    } else {
-      this.courseCardData = this.userStudentCourses
-    }
-    }
+  myCoursesState: {
+    type: String,
+    default: ''
   }
-}
+})
+
+const router = useRouter()
+
+
+
+// watch(() => currentPageCoursesData.value, (newValue) => {
+//   if (router.currentRoute.value.fullPath === '/AllCourses') {
+//     courseCardStore.setCourseCardData(newValue)
+//   }
+// })
+
+// watch(() => userBookmarkCourses.value, (newValue) => {
+//   if (router.currentRoute.value.fullPath === '/MyCourses' && props.myCoursesState === 'bookmark') {
+//     courseCardStore.setCourseCardData(newValue)
+//   }
+// })
+
+// // 初始化邏輯
+// if (router.currentRoute.value.fullPath === '/AllCourses') {
+//   courseCardStore.setCourseCardData(currentPageCoursesData.value)
+// } else if (router.currentRoute.value.fullPath === '/MyCourses') {
+//   if (props.myCoursesState === 'bookmark') {
+//     courseCardStore.setCourseCardData(userBookmarkCourses.value)
+//   } else {
+//     courseCardStore.setCourseCardData(userStudentCourses.value)
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

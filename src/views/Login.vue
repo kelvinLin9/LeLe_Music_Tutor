@@ -18,7 +18,7 @@
           <button 
             type="button" 
             class="btn btn-outline-dark d-block mx-auto py-16 d-flex justify-content-center w-75"
-            @click="signInWithGoogle()"
+            @click="googleLogin()"
             :disabled="loginLoading"
           >
             <img src="../assets/images/google-icon.png" alt="google icon" class="google-icon me-2">
@@ -211,6 +211,7 @@ const {
   isChecked } = storeToRefs(userStore)
 const signup = userStore.signup
 const login = userStore.login
+
 const checkUser = userStore.checkUser
 const verifyEmail = userStore.verifyEmail
 const resetPasswordEmail = userStore.resetPasswordEmail
@@ -247,7 +248,7 @@ const submitSignup = () => {
   };
 };
 
-const signInWithGoogle = () => {
+const googleLogin = () => {
   loginLoading.value = true;
   console.log(`${window.location.origin + '/callback'}`)
   const callbackURL = `${window.location.origin + import.meta.env.VITE_BASE_URL +  'callback'}`;

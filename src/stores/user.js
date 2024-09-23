@@ -40,14 +40,14 @@ export const useUserStore = defineStore('userStore', () => {
     return true;
   }, () => loginLoading.value = false);
 
-  const googleLogin = handleErrorAsync(async (token) => {
-    loginLoading.value = true;
-    const { data: { status, token: userToken, user } } = await userApi.axiosGoogleLogin(token);
-    if (status) {
-      localStorage.setItem('lele_music_tutor_token', userToken);
-      handleAuthentication(user, '登入成功');
-    }
-  }, () => loginLoading.value = false);
+  // const googleLogin = handleErrorAsync(async (token) => {
+  //   loginLoading.value = true;
+  //   const { data: { status, token: userToken, user } } = await userApi.axiosGoogleLogin(token);
+  //   if (status) {
+  //     localStorage.setItem('music_tutor_beta', userToken);
+  //     handleAuthentication(user, '登入成功');
+  //   }
+  // }, () => loginLoading.value = false);
 
   const signup = handleErrorAsync(async (data) => {
     signupLoading.value = true;
@@ -63,7 +63,7 @@ export const useUserStore = defineStore('userStore', () => {
       console.log(user)
       if (!user) throw new Error('No user data received');
       userInfo.value = user;
-      if (route.path === '/callback' || route.path === 'userLogin') redirectTo('/');
+      if (route.path === '/callback' || route.path === '/login') redirectTo('/');
     } catch (error) {
       console.error('User authentication failed', error);
       redirectTo('/login');
@@ -71,7 +71,7 @@ export const useUserStore = defineStore('userStore', () => {
   };
 
   const logout = () => {
-    document.cookie = 'music_tutor_beta=';
+    localStorage.setItem('music_tutor_beta', '');
     userInfo.value = {};
     Toast.fire({ icon: 'success', title: '已登出' });
     redirectTo('/login');
@@ -201,7 +201,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   return {
     userInfo, showLogInPage, loginLoading, signupLoading,
-    login, googleLogin, signup, checkUser, logout,
+    login, signup, checkUser, logout,
     getUser, verifyEmail, generateEmailCode, resetPassword,
     users, userTemp, userLoading, page, limit, totalPages, sortBy,
     getUsers, editUser, deleteUser

@@ -1,63 +1,69 @@
 import { defineStore } from 'pinia'
-import dataStore from './dataStore'
-import PaginationStore from './PaginationStore'
+import { computed, ref } from 'vue'
+import { useCourseStore } from './course'
+import { usePaginationStore } from './PaginationStore'
 
+export const useFilterStore = defineStore('filterStore', () => {
+  const courseStore = useCourseStore()
+  const paginationStore = usePaginationStore()
 
-const data = dataStore()
-const pagiStore = PaginationStore()
+  // state
+  const selectCityName = ref('')
+  const selectCourseCategory = ref('')
+  const selectCourseName = ref('')
+  const courseMethod = ref(['在學生家', '在老師家', '線上'])
+  const selectCourseMethod = ref('')
+  const sortMethod = ref(['依人氣', '依新舊', '依金額'])
+  const selectSortMethod = ref('依人氣')
 
-export default defineStore('filterStore', {
-  state: () => ({
-    selectCityName: '',
-    selectCourseCategory: '',
-    selectCourseName: '',
-    courseMethod: ['在學生家', '在老師家', '線上'], // 下拉選單用
-    selectCourseMethod: '',
-    sortMethod: ['依人氣', '依新舊', '依金額'], // 下拉選單用
-    selectSortMethod: '依人氣',
-  }),
-  actions: {
-    selectCityNameCancel () {
-      // 解決取消搜尋上課方式後上課地點還有值的問題
-      if (this.selectCourseMethod === '') {
-        this.selectCityName = ''
-      }
-    },
-    courseSort () {
-      console.log(this.selectSortMethod)
-      if (this.selectSortMethod === '依金額') {
-        data.AllCoursesFirebaseData.sort((a,b)  => {
-          return b.data.price - a.data.price
-        }) 
-      } else if (this.selectSortMethod === '依新舊') {
-        data.AllCoursesFirebaseData.sort((a,b)  => {
-          return b.createdTime - a.createdTime
-        }) 
-      } else if (this.selectSortMethod === '依人氣') {
-        data.AllCoursesFirebaseData.sort((a,b)  => {
-          return b.data.whoBuy.length - a.data.whoBuy.length
-        }) 
-      } 
+  // actions
+  function selectCityNameCancel() {
+    if (selectCourseMethod.value === '') {
+      selectCityName.value = ''
     }
-  },
-  getters: {
-    filterData () {
-      console.log('filter')
-      if (this.selectCourseMethod === '') {
-        return data.AllCoursesFirebaseData.filter((item) => {
-          return item.data.cityName.match(this.selectCityName) && item.data.courseCategory.match(this.selectCourseCategory) && item.data.courseName.match(this.selectCourseName) 
-        }) 
-      } else {
-        return data.AllCoursesFirebaseData.filter((item) => {
-          return item.data.cityName.match(this.selectCityName) && item.data.courseCategory.match(this.selectCourseCategory) && item.data.courseName.match(this.selectCourseName) && item.data.courseMethod.includes(this.selectCourseMethod)
-        })
-      }
-    },
-    currentPageCoursesData () {
-      // console.log(pagiStore.page.currentPage)
-      // 過濾出來的資料再分頁
-      pagiStore.pagination(this.filterData)
-      return pagiStore.eachPage
+  }
+
+  function courseSort() {
+    console.log(selectSortMethod.value)
+    if (selectSortMethod.value === '依金額') {
+      courseStore.courses.sort((a, b) => b.data.price - a.data.price)
+    } else if (selectSortMethod.value === '依新舊') {
+      courseStore.courses.sort((a, b) => b.createdTime - a.createdTime)
+    } else if (selectSortMethod.value === '依人氣') {
+      courseStore.courses.sort((a, b) => b.data.whoBuy.length - a.data.whoBuy.length)
     }
+  }
+
+  // getters
+  const filterData = computed(() => {
+    console.log('filter')
+    return courseStore.courses.filter((item) => {
+      const baseCondition = item.data.cityName.match(selectCityName.value) &&
+                            item.data.courseCategory.match(selectCourseCategory.value) &&
+                            item.data.courseName.match(selectCourseName.value)
+      
+      return selectCourseMethod.value === '' 
+        ? baseCondition
+        : baseCondition && item.data.courseMethod.includes(selectCourseMethod.value)
+    })
+  })
+
+  const currentPageCoursesData = computed(() => {
+    paginationStore.pagination(filterData.value)
+    return paginationStore.eachPage
+  })
+
+  return {
+    selectCityName,
+    selectCourseCategory,
+    selectCourseName,
+    courseMethod,
+    selectCourseMethod,
+    sortMethod,
+    selectSortMethod,
+    selectCityNameCancel,
+    courseSort,
+    filterData,
+    currentPageCoursesData
   }
 })

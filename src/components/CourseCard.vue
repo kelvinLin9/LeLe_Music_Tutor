@@ -45,46 +45,58 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapActions, mapWritableState } from 
-'pinia'  
-import dataStore from '@/stores/dataStore'
-import courseCardStore from '@/stores/courseCardStore'
-import filterStore from '@/stores/filterStore'
-import goStore from '@/stores/goStore'
+<script setup>
+import { watch, computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+// import { useDataStore } from '@/stores/dataStore'
+// import { useCourseCardStore } from '@/stores/courseCardStore'
+// import { useFilterStore } from '@/stores/filterStore'
+// import { useGoStore } from '@/stores/goStore'
 
-export default {
-  watch: {
-    // 所有課程頁面用(為了搜尋排序)
-    currentPageCoursesData() {
-      if (this.$router.currentRoute.value.fullPath === '/AllCourses'){
-        this.courseCardData = this.currentPageCoursesData
-      }
-    },
-    // 為了收藏頁變動時能重新渲染
-    userBookmarkCourses () {
-      if (this.$router.currentRoute.value.fullPath === '/MyCourses' && this.myCoursesState === 'bookmark')
-      this.courseCardData = this.userBookmarkCourses
-    }
-  },
-  computed: {
-    ...mapState(dataStore, ['bookmarkState', 'userStudentCourses', 'userBookmarkCourses', 'myCoursesState']),
-    ...mapWritableState(courseCardStore, ['courseCardData']),
-    ...mapState(filterStore, ['currentPageCoursesData']),
-  },
-  methods: {
-    ...mapActions(dataStore, ['toggleBookmark', 'getOneCoursesFirebaseData']),
-    ...mapActions(goStore, ['goCoursePage']),
+// const router = useRouter()
+// const dataStore = useDataStore()
+// const courseCardStore = useCourseCardStore()
+// const filterStore = useFilterStore()
+// const goStore = useGoStore()
 
-  },
-  created () {
-    if (this.$router.currentRoute.value.fullPath === '/AllCourses') {
-      this.courseCardData = this.currentPageCoursesData
-    } else if (this.$router.currentRoute.value.fullPath === '/MyCourses') {
-      this.courseCardData = this.userStudentCourses
-    }
-  }
-}
+// // 解構需要的狀態
+// const { bookmarkState, userStudentCourses, userBookmarkCourses, myCoursesState } = storeToRefs(dataStore)
+// const { courseCardData } = storeToRefs(courseCardStore)
+// const { currentPageCoursesData } = storeToRefs(filterStore)
+
+// // 解構需要的方法
+// const { toggleBookmark, getOneCoursesFirebaseData } = dataStore
+// const { goCoursePage } = goStore
+
+// // Watch
+// watch(currentPageCoursesData, (newValue) => {
+//   if (router.currentRoute.value.fullPath === '/AllCourses') {
+//     courseCardData.value = newValue
+//   }
+// })
+
+// watch(userBookmarkCourses, (newValue) => {
+//   if (router.currentRoute.value.fullPath === '/MyCourses' && myCoursesState.value === 'bookmark') {
+//     courseCardData.value = newValue
+//   }
+// })
+
+// // Created hook equivalent
+// onMounted(() => {
+//   if (router.currentRoute.value.fullPath === '/AllCourses') {
+//     courseCardData.value = currentPageCoursesData.value
+//   } else if (router.currentRoute.value.fullPath === '/MyCourses') {
+//     courseCardData.value = userStudentCourses.value
+//   }
+// })
+
+// 如果需要在模板中使用計算屬性，可以這樣定義
+// const someComputedProperty = computed(() => {
+//   // 計算邏輯
+// })
+
+// 所有需要在模板中使用的變量和方法都會自動暴露給模板
 </script>
 
 <style lang="scss" scoped>

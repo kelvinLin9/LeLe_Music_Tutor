@@ -1,9 +1,14 @@
 <template>
-  <BannerCom />
+  <Banner 
+    :bgUrl="bannerBgUrl"
+    :title="'全部課程'"
+    :text="'ALL COURSES'"
+    :footer="'專業培訓，探索多元音樂風格'"
+  />
   <!-- Loading -->
-  <CoursesLoading class="my-3" v-if="loading"/>
+  <CoursesLoading class="my-3" v-if="courseLoading"/>
   <!-- 搜尋、排序 -->
-  <div class="container mt-3 fs-7 fs-sm-6" v-if="!loading">
+  <div class="container mt-3 fs-7 fs-sm-6" v-if="!courseLoading">
     <div class="row align-items-center g-8">
       <!-- 技能 -->
       <div class="col-12 col-xxl-auto me-lg-1">
@@ -219,77 +224,89 @@
   </div>
 
   <!-- 卡片課程 -->
-  <div class="container my-3" v-if="!loading">
+  <div class="container my-3" v-if="!courseLoading">
     <!-- 無課程提示 -->
-    <div class="row" v-if="filterData.length == 0">
+    <!-- <div class="row" v-if="filterData.length == 0">
       <div class="col text-center fs-2 mt-48">
         很抱歉，沒有符合條件課程
       </div>
-    </div>
+    </div> -->
     <!-- 卡片課程 -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-24"
          v-if="displayState === 'grid'">
-      <CourseCard />
+      <!-- <CourseCard /> -->
     </div>
       <!-- 條列課程 -->
     <div v-if="displayState === 'list'">
       <div class="w-100 w-lg-70 w-xl-60">
-        <CourseCardList />
+        <CourseCardList
+        :courseCardData="courses"
+      />
       </div>
     </div>
   </div>
-
+  {{ courses }}
   <!-- 分頁鈕 -->
-  <PaginationCom v-if="!loading" />
+  <PaginationCom v-if="!courseLoading" />
 </template>
   
-<script>
+<script setup>
 import PaginationCom from '../components/PaginationCom.vue'
 import CoursesLoading from '../components/CoursesLoading.vue'
-import BannerCom from '../components/Banner.vue'
+import Banner from '../components/Banner.vue'
 import CourseCard from '../components/CourseCard.vue'
-import { mapState, mapActions, mapWritableState } from 
-'pinia'  
-import dataStore from '@/stores/dataStore'
-import filterStore from '@/stores/filterStore'
-import bannerStore from '@/stores/bannerStore'
-import courseCardStore from '@/stores/courseCardStore'
 import CourseCardList from '../components/CourseCardList.vue'
+import { ref, onMounted } from 'vue';
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { useCourseStore } from '@/stores/course.js';
+import { useFilterStore } from '@/stores/filterStore'
 
-export default {
-  components: { PaginationCom, CoursesLoading, BannerCom, CourseCard, CourseCardList },
-  computed: {
-    ...mapState(dataStore, ['loading']),
-    ...mapState(filterStore, ['filterData','courseMethod', 'sortMethod', 'currentPageCoursesData']),
-    ...mapWritableState(dataStore, ['myCoursesState', 'displayState']),
-    ...mapWritableState(filterStore, ['selectCityName', 'selectCourseCategory', 'selectCourseName','selectCourseMethod', 'selectSortMethod']),
-    ...mapWritableState(courseCardStore, ['courseCardData']),
+const router = useRouter();
+const courseStore = useCourseStore();
+const { courses, courseLoading } = storeToRefs(courseStore);
+const getCourses = courseStore.getCourses
 
-  },
-  methods: {
-    ...mapActions(dataStore, ['onAuthStateChanged', 'getOneCoursesFirebaseData']),
-    ...mapActions(filterStore, ['selectCityNameCancel', 'courseSort']),
-    ...mapActions(bannerStore, ['getBannerInfo'])
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
 
-  },
-  created () {
-    this.onAuthStateChanged()
-    this.courseSort()
-    this.getBannerInfo(
-      new URL('../assets/images/banner.jpg', import.meta.url).href,
-      '全部課程',
-      'ALL COURSES',
-      '專業培訓，探索多元音樂風格'
-    )
-    this.displayState = 'grid'
-    this.myCoursesState = 'bookmark'
-  },
-  unmounted () {
-    this.selectCourseName = ''
-    this.selectCourseMethod = ''
-    this.selectCourseCategory = ''
-  }
-}
+const displayState = ref('list')
+
+const filterStore = useFilterStore()
+
+const { filterData, courseMethod, sortMethod, currentPageCoursesData, 
+        selectCityName, selectCourseCategory, selectCourseName, 
+        selectCourseMethod, selectSortMethod } = storeToRefs(filterStore)
+
+const { selectCityNameCancel, courseSort } = filterStore
+const bannerBgUrl = new URL('../assets/images/banner.jpg', import.meta.url).href
+
+// 生命週期鉤子
+// onMounted(() => {
+//   onAuthStateChanged()
+//   courseSort()
+//   getBannerInfo(
+//     new URL('../assets/images/banner.jpg', import.meta.url).href,
+//     '全部課程',
+//     'ALL COURSES',
+//     '專業培訓，探索多元音樂風格'
+//   )
+//   displayState.value = 'grid'
+//   myCoursesState.value = 'bookmark'
+// })
+
+// onUnmounted(() => {
+//   selectCourseName.value = ''
+//   selectCourseMethod.value = ''
+//   selectCourseCategory.value = ''
+// })
+onMounted(() => {
+  getCourses({
+    instructorId: userInfo.value._id,
+    limit: 10
+  })
+});
 </script>
 
 <style lang="scss" scoped>

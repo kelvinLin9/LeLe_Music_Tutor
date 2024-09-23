@@ -61,12 +61,12 @@ import { defineStore } from 'pinia'
 import logInStore from './loginStore'
 import dataStore from './dataStore'
 import courseCardStore from './courseCardStore'
-import filterStore from './filterStore'
+// import filterStore from './filterStore'
 
 const logIn = logInStore()
 const data = dataStore()
 const courseCard = courseCardStore()
-const filter = filterStore()
+// const filter = filterStore()
 export default defineStore('goStore', {
   actions: {
     goCoursePage (id) {
@@ -103,8 +103,8 @@ export default defineStore('goStore', {
     goAllCourses(search) {
       router.push('/AllCourses')
       if (search) {
-        filter.selectCourseCategory = search
-        filter.selectCourseName = ''
+        // filter.selectCourseCategory = search
+        // filter.selectCourseName = ''
       }
     },
   }

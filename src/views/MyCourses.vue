@@ -6,27 +6,27 @@
         <div class="col-12 col-lg-6 mb-3 mb-lg-0">
           <div class="d-flex align-items-center">
             <div class="user-photo position-relative">
-              <img :src="teacherData.teacherImg" alt="大頭照" 
-                  v-if="teacherData.teacherImg">
+              <img :src="userInfo.photo" alt="大頭照" 
+                  v-if="userInfo.photo">
               <img src="../assets/images/預設大頭貼.png" alt="預設大頭照"
-                  v-if="!teacherData.teacherImg">
+                  v-if="!userInfo.photo">
             </div>
-            <h1 class="ms-48"> {{ teacherData.displayName }} </h1>
+            <h1 class="ms-48"> {{ userInfo.name }} </h1>
           </div>
         </div>
         <div class="col-12 col-lg-6 ms-auto">
           <div class="row justify-content-between align-items-center">
             <div class="col-auto text-center">
               <h3 class="fs-6 text-gray-600">參加課程</h3>
-              <p class="fs-1 text-primary">{{ userStudentCourses.length }}</p>
+              <!-- <p class="fs-1 text-primary">{{ userStudentCourses.length }}</p> -->
             </div>
             <div class="col-auto text-center">
               <h3 class="fs-6 text-gray-600">已開課程</h3>
-              <p class="fs-1 text-primary">{{ userTeacherCourses.length }}</p>
+              <p class="fs-1 text-primary">{{ courses.pagination }}</p>
             </div>
             <div class="col-auto text-center">
               <h3 class="fs-6 text-gray-600">目前收藏</h3>
-              <p class="fs-1 text-primary">{{ userBookmarkCourses.length }}</p>
+              <!-- <p class="fs-1 text-primary">{{ userBookmarkCourses.length }}</p> -->
             </div>
           </div>
         </div>
@@ -71,11 +71,11 @@
   </div>
   <!-- Loading -->
   <div class="container">
-    <CoursesLoadingList v-if="loading"/>
+    <CoursesLoadingList v-if="courseLoading"/>
   </div>
   <!-- 無課程提示 -->
-  <div class="container d-flex justify-content-center align-items-center text-center" v-if="!loading">
-    <div v-if="userStudentCourses.length === 0 && myCoursesState === 'student'">
+  <!-- <div class="container d-flex justify-content-center align-items-center text-center" v-if="!courseLoading">
+    <div v-if="userStudentCourses?.length === 0 && myCoursesState === 'student'">
       <p class="fs-1 my-16">尚未購買課程</p>
       <RouterLink to="/AllCourses">
         <button type="button" class="btn btn-primary">
@@ -83,7 +83,7 @@
         </button>
       </RouterLink>
     </div>
-    <div v-if="userTeacherCourses.length === 0 && myCoursesState === 'teacher'">
+    <div v-if="userTeacherCourses?.length === 0 && myCoursesState === 'teacher'">
       <p class="fs-1 my-16">尚未建立課程</p>
       <RouterLink to="/CreateCourses/BeATeacherStep1">
         <button type="button" class="btn btn-primary">
@@ -91,7 +91,7 @@
         </button>
       </RouterLink>
     </div>
-    <div v-if="userBookmarkCourses.length === 0 && myCoursesState === 'bookmark'">
+    <div v-if="userBookmarkCourses?.length === 0 && myCoursesState === 'bookmark'">
       <p class="fs-1 my-16">尚未收藏課程</p>
       <RouterLink to="/AllCourses">
         <button type="button" class="btn btn-primary">
@@ -99,16 +99,19 @@
         </button>
       </RouterLink>
     </div>
-  </div>
+  </div> -->
 
   <!-- 老師設定上課時間 -->
   <SetUpClassScheduleModal/>
   <!-- 學生查看上課時間 -->
   <class-schedule-modal/>
 
-  <div class="container d-flex mb-16" v-if="!loading">
+  <div class="container d-flex mb-16" v-if="!courseLoading">
     <div class="w-100 w-lg-70 w-xl-60">
-      <CourseCardList />
+      <CourseCardList
+        :courseCardData="courses"
+        :myCoursesState="myCoursesState"
+      />
     </div>
     <!-- <div class="w-50 ">
       我的行程表
@@ -116,37 +119,35 @@
   </div>
   
     
-
+{{ courses[0] }}
 </template>
   
-<script>
+<script setup>
 import CourseCardList from '../components/CourseCardList.vue'
 import CoursesLoadingList from '../components/CoursesLoadingList.vue'
 import SetUpClassScheduleModal from '../components/SetUpClassScheduleModal.vue'
 import ClassScheduleModal from '../components/ClassScheduleModal.vue'
-import { mapState, mapActions, mapWritableState } from 
-'pinia'  
-import courseCardStore from '@/stores/courseCardStore'
-import dataStore from '@/stores/dataStore'
+import { ref, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { useCourseStore } from '@/stores/course.js';
 
+const router = useRouter();
+const courseStore = useCourseStore();
+const { courses, courseLoading } = storeToRefs(courseStore);
+const getCourses = courseStore.getCourses
 
-export default {
-  components: { CoursesLoadingList, SetUpClassScheduleModal, CourseCardList, ClassScheduleModal },
-  computed: {
-    ...mapState(dataStore, ['teacherData', 'userTeacherCourses', 'userStudentCourses', 'userBookmarkCourses', 'loading']),
-    ...mapWritableState(dataStore, ['myCoursesState', 'classScheduleData']),
-    ...mapWritableState(courseCardStore, ['courseCardData']),
-  },
-  methods: {
-    ...mapActions(dataStore, ['onAuthStateChanged', 'getOneCoursesFirebaseData', 'SetUpClassSchedule', 'toggleBookmark']),
-    
-  },
-  created () {
-    this.onAuthStateChanged()
+const userStore = useUserStore();
+const { userInfo } = storeToRefs(userStore);
 
-    // this.myCoursesState = 'student'
-  }
-}
+const myCoursesState = ref('student');
+onMounted(() => {
+  getCourses({
+    instructorId: userInfo.value._id,
+    limit: 10
+  })
+});
 </script>
 
 <style lang="scss" scoped>

@@ -14,7 +14,7 @@ export const axiosInstance = axios.create({
 
 // interceptors(攔截器) 目的是在發送請求前將 token 加入 headers 
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('lele_music_tutor_token');
+  const token = localStorage.getItem('music_tutor_beta');
   console.log(token)
   if (token) {
     config.headers.Authorization = token;
