@@ -226,11 +226,11 @@
   <!-- 卡片課程 -->
   <div class="container my-3" v-if="!courseLoading">
     <!-- 無課程提示 -->
-    <!-- <div class="row" v-if="filterData.length == 0">
+    <div class="row" v-if="courses.length == 0">
       <div class="col text-center fs-2 mt-48">
         很抱歉，沒有符合條件課程
       </div>
-    </div> -->
+    </div>
     <!-- 卡片課程 -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-24"
          v-if="displayState === 'grid'">
@@ -240,73 +240,100 @@
     <div v-if="displayState === 'list'">
       <div class="w-100 w-lg-70 w-xl-60">
         <CourseCardList
-        :courseCardData="courses"
+          :courseCardData="courses"
       />
       </div>
     </div>
   </div>
-  {{ courses }}
   <!-- 分頁鈕 -->
-  <PaginationCom v-if="!courseLoading" />
+  <Pagination
+    v-model:currentPage="currentPage"
+    :totalPages="totalPages"
+  />
 </template>
   
 <script setup>
-import PaginationCom from '../components/PaginationCom.vue'
+import { ref, onMounted, watch, onUnmounted, computed } from 'vue';
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user';
+import { useCourseStore } from '@/stores/course.js';
+import Pagination from '../components/Pagination.vue'
 import CoursesLoading from '../components/CoursesLoading.vue'
 import Banner from '../components/Banner.vue'
 import CourseCard from '../components/CourseCard.vue'
 import CourseCardList from '../components/CourseCardList.vue'
-import { ref, onMounted } from 'vue';
-import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/user';
-import { useCourseStore } from '@/stores/course.js';
-import { useFilterStore } from '@/stores/filterStore'
 
-const router = useRouter();
 const courseStore = useCourseStore();
-const { courses, courseLoading } = storeToRefs(courseStore);
-const getCourses = courseStore.getCourses
+const { courses, courseLoading, currentPage, totalPages } = storeToRefs(courseStore);
+const { getCourses } = courseStore;
 
 const userStore = useUserStore();
 const { userInfo } = storeToRefs(userStore);
 
-const displayState = ref('list')
+const displayState = ref('list');
+const bannerBgUrl = new URL('../assets/images/banner.jpg', import.meta.url).href;
 
-const filterStore = useFilterStore()
+const selectCourseCategory = ref('');
+const selectCourseName = ref('');
+const selectCourseMethod = ref('');
+const selectSortMethod = ref('依人氣');
+const sortMethod = ['依人氣', '依價格', '依評價'];
+const courseMethod = ['線上', '在老師家', '在學生家'];
 
-const { filterData, courseMethod, sortMethod, currentPageCoursesData, 
-        selectCityName, selectCourseCategory, selectCourseName, 
-        selectCourseMethod, selectSortMethod } = storeToRefs(filterStore)
+// 將所有篩選條件合併到一個計算屬性中
+const filterParams = computed(() => ({
+  // instructorId: userInfo.value?._id,
+  page: currentPage.value,
+  category: selectCourseCategory.value,
+  method: selectCourseMethod.value,
+  name: selectCourseName.value,
+  sortBy: selectSortMethod.value
+}));
 
-const { selectCityNameCancel, courseSort } = filterStore
-const bannerBgUrl = new URL('../assets/images/banner.jpg', import.meta.url).href
+const selectCityNameCancel = (() => {
+  selectCourseCategory.value = ''
+  selectCourseMethod.value = ''
+  selectCourseName.value = ''
+  selectSortMethod.value = '依人氣'
+})
+// 使用 watch 來監聽 filterParams 的變化
+watch(filterParams, (newParams) => {
+  console.log(newParams)
+    getCourses(newParams);
+}, { deep: true });
 
-// 生命週期鉤子
-// onMounted(() => {
-//   onAuthStateChanged()
-//   courseSort()
-//   getBannerInfo(
-//     new URL('../assets/images/banner.jpg', import.meta.url).href,
-//     '全部課程',
-//     'ALL COURSES',
-//     '專業培訓，探索多元音樂風格'
-//   )
-//   displayState.value = 'grid'
-//   myCoursesState.value = 'bookmark'
-// })
-
-// onUnmounted(() => {
-//   selectCourseName.value = ''
-//   selectCourseMethod.value = ''
-//   selectCourseCategory.value = ''
-// })
-onMounted(() => {
-  getCourses({
-    instructorId: userInfo.value._id,
-    limit: 10
-  })
+// 監聽 userInfo 的變化，以處理異步加載的情況
+watch(() => userInfo.value?._id, (newId) => {
+  if (newId) {
+    getCourses(filterParams.value);
+  }
 });
+
+onMounted(() => {
+  if (userInfo.value?._id) {
+    getCourses();
+  }
+});
+
+onUnmounted(() => {
+  selectCourseName.value = '';
+  selectCourseMethod.value = '';
+  selectCourseCategory.value = '';
+});
+
+// 處理分頁變化的函數
+const handlePageChange = (newPage) => {
+  currentPage.value = newPage;
+};
+
+// 重置篩選條件的函數
+const resetFilters = () => {
+  selectCourseCategory.value = '';
+  selectCourseMethod.value = '';
+  selectCourseName.value = '';
+  selectSortMethod.value = '依人氣';
+  currentPage.value = 1;
+};
 </script>
 
 <style lang="scss" scoped>

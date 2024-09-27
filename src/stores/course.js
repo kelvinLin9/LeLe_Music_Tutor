@@ -29,18 +29,18 @@ export const useCourseStore = defineStore('courseStore', () => {
     intro: '',
     img: '',
   })
-  const page = ref(1)
+  const currentPage = ref(1)
   const limit = ref(10)
   const totalPages = ref(1)
   const sortBy = ref('createdAt')
 
   const getCourses = handleErrorAsync(
-    async(params) => {
+    async(params, instructorId) => {
       courseLoading.value = true;
       const res = await axiosGetCourses(params);
-      console.log(res)
+      // console.log(res)
       courses.value = res.data.data;
-      page.value = res.data.pagination.page
+      currentPage.value = res.data.pagination.page
       totalPages.value = res.data.pagination.totalPages
       limit.value = res.data.pagination.limit
 
@@ -98,7 +98,7 @@ export const useCourseStore = defineStore('courseStore', () => {
     courses,
     course,
     courseTemp,
-    page,
+    currentPage,
     limit,
     totalPages,
     sortBy,

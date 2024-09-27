@@ -32,7 +32,7 @@
           title="加入 / 移除收藏"
           ></i> -->
       </h2>
-      <h3 class="fs-6">by {{ item.name }}</h3>
+      <h3 class="fs-6">by {{ item.instructor.name }}</h3>
       <p class="d-flex align-items-center"> 
           <span class="material-symbols-outlined fs-6 me-4">timer</span>
           {{ item.minutes }}
@@ -63,13 +63,11 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, watch, defineProps } from 'vue'
 
 const props = defineProps({
   courseCardData: {
     type: Array,
-    required: true
   },
   myCoursesState: {
     type: String,
@@ -77,7 +75,6 @@ const props = defineProps({
   }
 })
 
-const router = useRouter()
 
 
 

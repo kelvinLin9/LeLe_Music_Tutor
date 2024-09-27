@@ -64,32 +64,33 @@
   </div>
 </template>
 
-<script>
-// Import Swiper Vue.js components
+<script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import { storeToRefs } from 'pinia'
+import { useFilterStore } from '@/stores/filterStore'
 
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-import 'swiper/css/effect-fade';
-import { mapActions, mapState, mapWritableState } from 'pinia'
-import filterStore from '@/stores/filterStore'
-import goStore from '../stores/goStore'
+import 'swiper/css/effect-fade'
 
-export default {
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
-  computed: {
-    ...mapWritableState(filterStore, ['selectCourseName']),
+// Initialize stores
+const filterStore = useFilterStore()
 
-  },
-  methods: {
-    ...mapActions(goStore, ['goAllCourses']),
-  },
-}
+// Destructure writable state from filterStore
+const { selectCourseName } = storeToRefs(filterStore)
+
+
+// 如果需要定義其他的響應式數據或方法，可以在這裡添加
+// const someMethod = () => {
+//   // 方法實現
+// }
+
+// Components are automatically registered when using <script setup>
+// so we don't need to explicitly register Swiper and SwiperSlide
+
+// All variables and methods defined here are automatically available in the template
 </script>
 
 <style lang="scss" scoped>
